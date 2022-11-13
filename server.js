@@ -8,6 +8,7 @@ app.use((req, res, next) => {
 	next()
 })
 
+
 const data = {
 		"graph": {
 			"elements": {
@@ -44,6 +45,7 @@ const data = {
 	}
 
 app.get('/api', function (req, res) {
+
 	return res.json(data);
 });
 

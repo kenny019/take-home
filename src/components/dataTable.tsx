@@ -10,24 +10,7 @@ import {
 
 import EditDashboardModal from './editDashboardModal';
 
-type rowData = {
-    [key: string]: {
-        [props: string]: any,
-    },
-}
-
-type elementData = {
-    [key: string]: {
-        props: {
-            type: string,
-            descr: string,
-            defVal? : string,
-            name: string,
-        }
-    }
-}
-
-// if done properly will export types in seperate file
+import { rowData, elementData } from '../helpers/types';
 
 const parseType = (type: string, data: string) => {
     if (type === 'Date') {
@@ -51,17 +34,13 @@ const DataTable = () : JSX.Element => {
     const [modalID, setModalID] = useState<string>('');
 
     useEffect(() => {
-        console.log('use effect', oldAPIData === JSON.stringify(apiData))
-
         if (oldAPIData === JSON.stringify(apiData)) {
             return
         }
 
-
         if (typeof(apiData.graph) == 'object' && typeof(apiData.graph.elements) == 'object') {
             Object.keys(apiData.graph.elements).map((values) => {
                 if (!graphElements[values] || oldAPIData !== JSON.stringify(apiData)) {
-                    console.log('elements works')
 
                     setGraphElements(obj => ({
                         ...obj, [values]: {
@@ -81,10 +60,10 @@ const DataTable = () : JSX.Element => {
         if (apiData.data) {
             apiData.data.map((values, i) => {
                 if (!dataRows[values._id] || oldAPIData !== JSON.stringify(apiData)) {
+
                     setDataRows(obj => ({
                         ...obj, [values._id]: {
-                            name: values.name,
-                            createdAt: values.createdAt,
+                            ...values,
                         }
                     }))
                 }
@@ -138,6 +117,7 @@ const DataTable = () : JSX.Element => {
                             setShowModal(true);
                         }
 
+
                         return(
                             <>
                             <tr className="bg-white border-b" key={i}>
@@ -146,7 +126,7 @@ const DataTable = () : JSX.Element => {
                                         return(
                                             <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap" key={x}>
                                                 {
-                                                parseType(graphElements[v].props.type, dataRows[values][v])
+                                                    parseType(graphElements[v].props.type, dataRows[values][v])
                                                 }
                                             </th>
                                         )

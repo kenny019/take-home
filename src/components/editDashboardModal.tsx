@@ -7,22 +7,7 @@ import {
     populateData
 } from '../helpers/populateData';
 
-type rowData = {
-    [key: string]: {
-        [props: string]: any,
-    },
-}
-
-type elementData = {
-    [key: string]: {
-        props: {
-            type: string,
-            descr: string,
-            defVal? : string,
-            name: string,
-        }
-    }
-}
+import { rowData, elementData } from '../helpers/types';
 
 const EditDashboardModal = ({ _id, setShowModal, rowData, graphElements}: {_id: string, setShowModal: React.Dispatch<React.SetStateAction<boolean>>, rowData: rowData, graphElements: elementData}) : JSX.Element => { 
 
@@ -32,8 +17,6 @@ const EditDashboardModal = ({ _id, setShowModal, rowData, graphElements}: {_id: 
 
     const SubmitEdit = async (event: React.MouseEvent<HTMLButtonElement>) => { // open dialog
         event.preventDefault();
-
-        console.log(clonedRowData)
 
         apiData.data.map((obj, i) => {
             if (clonedRowData[obj._id]) {
@@ -89,11 +72,14 @@ const EditDashboardModal = ({ _id, setShowModal, rowData, graphElements}: {_id: 
                                     onChange={(e) => {
                                         apiData.data?.map((obj, i) => {
                                             if (obj._id === _id) {
-                                                setClonedRowData(obj => ({
-                                                    ...obj, [_id]: {
+                                                
+                                                setClonedRowData(oldobj => ({
+                                                    ...oldobj, [_id]: {
+                                                        ...oldobj[_id],
                                                         [v]: e.target.value,
                                                     }
                                                 }))
+
                                             }
                                         })
                                     }}
